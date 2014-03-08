@@ -1,0 +1,19 @@
+{
+ "_id" : "_design/example",
+  "views" : {
+    "revs" : {
+      "map" : "function(doc){ emit(doc._id, doc._rev)}"
+    },
+    "nofilter" : {
+      "map" : "function(doc){ emit(doc._id, [doc.type, doc.name, doc.employees]); }"
+    },     
+    "filter" : {
+      "map" : "function(doc){ if (doc.type == 'company') { emit(doc._id, [doc.type, doc.name, doc.employees]); }}"
+    },    
+    "sum" : {
+      "map" : "function(doc){ if (doc.type == 'company') { emit(doc._id, doc.employees); }}",
+      
+      "reduce" : "function(key, values, rereduce){ return sum(values); }"      		
+    }    
+  }
+}
